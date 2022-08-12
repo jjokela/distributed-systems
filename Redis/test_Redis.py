@@ -5,6 +5,25 @@ import redis
 
 class TestRedis(unittest.TestCase):
 
+    def get_stufF(self):
+        return "here is the stuff"
+
+    def test_cache_aside(self):
+        client = redis.Redis(host='127.0.0.1', port=6379)
+        cache_key = 'stuff'
+
+        if client.exists(cache_key):
+            print('got from cache')
+            result = client.get(cache_key)
+        else:
+            result = self.get_stufF()
+            client.set(cache_key, result, 10)
+            print('added to cache')
+            print(f'ttl: {client.ttl(cache_key)}')
+
+        print(result)
+
+
     # @unittest.skip('Requires a local Redis container being up and running')
     def test_something(self):
 
